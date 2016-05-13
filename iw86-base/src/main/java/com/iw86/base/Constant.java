@@ -40,6 +40,8 @@ public class Constant {
 	public static final String MSG              = "msg";
 	public static final int SUCCESS             = 0;
 	public static final int FAILED              = 1;
+	public static final int SIZE                = 40;
+	public static final int MAX                 = 100000;
 	public static final int ioBufferSize        = 16384;
 	
 }

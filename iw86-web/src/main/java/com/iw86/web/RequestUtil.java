@@ -195,8 +195,8 @@ public class RequestUtil {
 	 * @param request
 	 * @return row
 	 */
-	public static Row getParam(HttpServletRequest request, String notmath) {
-		return getParam(request, notmath, ",");
+	public static Row<String,Object> getParam(HttpServletRequest request, String notmath) {
+		return getParam(request, notmath, Constant.COMMA);
 	}
 
 	/**
@@ -206,8 +206,8 @@ public class RequestUtil {
 	 * @param separator
 	 * @return
 	 */
-	public static Row getParam(HttpServletRequest request, String notmath, String separator) {
-		Row row = new Row();
+	public static Row<String,Object> getParam(HttpServletRequest request, String notmath, String separator) {
+		Row<String,Object> row = new Row<String,Object>();
 		Enumeration paramNames = request.getParameterNames();
 		while (paramNames.hasMoreElements()) {
 			String paramName = paramNames.nextElement().toString();
@@ -227,8 +227,8 @@ public class RequestUtil {
 	 * @param notmath
 	 * @return
 	 */
-	public static Row getAttribute(HttpServletRequest request, String notmath) {
-		Row row = new Row();
+	public static Row<String,Object> getAttribute(HttpServletRequest request, String notmath) {
+		Row<String,Object> row = new Row<String,Object>();
 		Enumeration attrNames = request.getAttributeNames();
 		while (attrNames.hasMoreElements()) {
 			String attrName = attrNames.nextElement().toString();

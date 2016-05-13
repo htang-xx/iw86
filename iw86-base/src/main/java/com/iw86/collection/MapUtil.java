@@ -13,11 +13,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
-import com.iw86.base.BeanUtil;
 import com.iw86.lang.Conver;
 import com.iw86.lang.StringUtil;
 
@@ -134,7 +134,7 @@ public class MapUtil {
 				Iterator<?> i = map.keySet().iterator();
 				while (i.hasNext()) {
 					key = i.next();
-					BeanUtil.setProperty(perFillObject, (String) key, map.get(key));
+					BeanUtils.setProperty(perFillObject, (String) key, map.get(key));
 				}
 			}
 		} catch (Exception e) {
@@ -157,7 +157,7 @@ public class MapUtil {
 				for (int i = 0; i < fields.length; i++) {
 					String name = fields[i].getName();
 					if(!name.equals("serialVersionUID")){
-						row.put(name, BeanUtil.getProperty(vo, name));
+						row.put(name, BeanUtils.getProperty(vo, name));
 					}
 				}
 			} catch (Exception e) {
@@ -183,9 +183,9 @@ public class MapUtil {
 				for (int i = 0; i < fields.length; i++) {
 					String name = fields[i].getName();
 					if(exclude && !Arrays.asList(properties).contains(name)){
-						row.put(name, BeanUtil.getProperty(vo, name));
+						row.put(name, BeanUtils.getProperty(vo, name));
 					}else if(!exclude && Arrays.asList(properties).contains(name)){
-						row.put(name, BeanUtil.getProperty(vo, name));
+						row.put(name, BeanUtils.getProperty(vo, name));
 					}
 				}
 			} catch (Exception e) {

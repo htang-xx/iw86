@@ -91,19 +91,20 @@ public class AutoGenerator {
 				FileUtil.mkDirs(beanPath);
 				StringBuilder buf = new StringBuilder();
 				buf.append("package ").append(packageName).append(";\n\n");
+				buf.append("import java.io.Serializable;\n");
 				buf.append("import org.apache.commons.lang.builder.ToStringBuilder;\n");
 				buf.append("import org.apache.commons.lang.builder.ToStringStyle;\n\n");
 				boolean hasBigDecimal = false;
 				StringBuilder buf2 = new StringBuilder();
 				buf2.append("/**\n").append(" * @author AutoGenerator\n").append(" * \n").append(" */\n");
-				buf2.append("public class ").append(dbBean).append(" {\n\n");
-				buf2.append("	private static final long serialVersionUID = 1L;\n");
+				buf2.append("public class ").append(dbBean).append(" implements Serializable {\n\n");
+				buf2.append("	private static final long serialVersionUID = 1L;\n\n");
 				StringBuilder fun = new StringBuilder();
 				for (Row row : list) {
-					String field = row.gets("Field");
-					String type = getType((String) row.get("Type"));
+					String field = row.gets("COLUMN_NAME");
+					String type = getType((String) row.get("COLUMN_TYPE"));
 					if(!hasBigDecimal && type.equals("BigDecimal")) hasBigDecimal = true;
-					buf2.append("	/** ").append(row.gets("Comment","")).append(" */\n");
+					buf2.append("	/** ").append(row.gets("COLUMN_COMMENT","")).append(" */\n");
 					buf2.append("	private ").append(type).append(" ").append(field).append(";\n\n");
 					fun.append("	public ").append(type).append(" get");
 					fun.append(setFirstCharUpcase(field)).append("() {\n");
@@ -140,7 +141,7 @@ public class AutoGenerator {
 			FileUtil.mkDirs(daoPath);
 			StringBuilder ibuf = new StringBuilder(); //interface代码
 			ibuf.append("package ").append(packageName).append(";\n\n");
-			ibuf.append("import com.iw86.base.db.BaseDao;\n");
+			ibuf.append("import com.iw86.db.BaseDao;\n");
 			ibuf.append("import org.springframework.stereotype.Repository;\n");
 			ibuf.append("/**\n").append(" * @author AutoGenerator\n").append(" * \n").append(" */\n").append("@Repository\n");
 			ibuf.append("public interface ").append(dbBean).append("Dao extends BaseDao {\n\n");
@@ -168,7 +169,7 @@ public class AutoGenerator {
 			if (list != null) {
 				String xml=mapPath+"/"+dbBean+"Dao.xml";
 				System.out.println(xml+"开始生成。");
-				String keyName=list.get(0).get("Field").toString(); //目前取第一个字段作为主键
+				String keyName=list.get(0).gets("COLUMN_NAME"); //目前取第一个字段作为主键
 				StringBuilder buf = new StringBuilder();
 				buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
 				buf.append("<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n\n");
@@ -183,7 +184,7 @@ public class AutoGenerator {
 				buf.append("	<select id=\"select\" resultType=\"").append(beanName).append("\">\n");
 				buf.append("		select * from ").append(dbTable).append(" where ").append(keyName).append("=#{").append(keyName).append("}\n");
 				buf.append("	</select>\n\n");
-				buf.append("	<select id=\"selectRow\" resultType=\"com.iw86.base.collection.Row\">\n");
+				buf.append("	<select id=\"selectRow\" resultType=\"com.iw86.collection.Row\">\n");
 				buf.append("		select ${fields} from ").append(dbTable).append(" where ").append(keyName).append("=#{").append(keyName).append("}\n");
 				buf.append("	</select>\n\n");
 				buf.append("	<select id=\"count\" resultType=\"int\">\n");
@@ -198,7 +199,7 @@ public class AutoGenerator {
 				buf.append("		</if>\n");
 				buf.append("		limit #{start},#{size}\n");
 				buf.append("	</select>\n\n");
-				buf.append("	<select id=\"listRow\" resultType=\"com.iw86.base.collection.Row\">\n");
+				buf.append("	<select id=\"listRow\" resultType=\"com.iw86.collection.Row\">\n");
 				buf.append("		select ${fields} from ").append(dbTable).append("\n");
 				buf.append("		<include refid=\"dynamicWhere\" />\n");
 				buf.append("		<if test=\"_parameter.containsKey('order') and order!=null\">\n");
@@ -213,8 +214,8 @@ public class AutoGenerator {
 				int i=0;
 				for (Row row : list) {
 					if(i!=0){ //主键不作insert和update
-						String field = row.get("Field").toString();
-						String type = getType((String) row.get("Type"));
+						String field = row.gets("COLUMN_NAME");
+						String type = getType((String) row.get("COLUMN_TYPE"));
 						if(i!=1){
 							buf.append(",");
 							insert.append(",");
@@ -262,7 +263,7 @@ public class AutoGenerator {
 		str=str.toLowerCase();
 		for(int i=0,n=intType.length;i<n;i++){
 			if(str.startsWith(intType[i])){
-				return "Integer";
+				return "int";
 			}
 		}
 		if(str.startsWith("bigint")) return "Long";

@@ -106,6 +106,14 @@ public class Row<K,V> extends HashMap<K,V> {
 		return strs;
 	}
 	
+	/**
+	 * @param perFillObject
+	 * @return
+	 */
+	public Object toValueObject(Object perFillObject) {
+		return MapUtil.toValueObject(this, perFillObject);
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see java.util.AbstractMap#toString()

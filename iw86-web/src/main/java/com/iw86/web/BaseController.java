@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import com.iw86.base.Constant;
 import com.iw86.base.DateUtil;
+import com.iw86.base.Result;
 import com.iw86.collection.Row;
 import com.iw86.io.FileUtil;
 import com.iw86.lang.StringUtil;
@@ -115,6 +116,11 @@ public abstract class BaseController extends MultiActionController {
 			logger.error("异常", e);
 		}
 		return null;
+	}
+	
+	protected String renderJsonByResult(HttpServletRequest request,
+			HttpServletResponse response, Result result) {
+		return renderJson(request, response, result.toString());
 	}
 	
 	/**
